@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TestController {
 
     @GetMapping("/test")
-    public String mainWithParam(@RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                ModelMap map) {
-        map.addAttribute("name", name);
+    public String mainWithParam() {
         return "test"; //view
     }
 }
