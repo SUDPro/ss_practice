@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>
+    <form>
+        Username:<input type="text" id="name" name="name"/>
+        <input type="button" id="connectButton" name="connectButton" onclick="connect()" value="connect to chat"><br/>
+        Message:<input type="text" id="message" name="message"/><br/>
+        <input type="button" id="sendButton" value="Send" style="visibility: hidden" onclick="sendMessage()"/>
+    </form>
+    <input type="button" style="visibility: hidden" onclick="closeConnection()" id="closeConnection"
+           value="close connection">
+    <ul id="messageArea">
+    </ul>
+</h1>
+</body>
+<script>
+    var messageArea = document.querySelector('#messageArea');
+    var socket;
+
+    function connect() {
+        socket = new WebSocket("ws://localhost:8080/chat");
+        socket.onopen = function () {
+            console.log("Соединение установлено.");
+            document.getElementById("connectButton").style.visibility = "hidden";
+            document.getElementById("sendButton").style.visibility = "visible";
+            document.getElementById("closeConnection").style.visibility = "visible";
+        };
+        socket.onmessage = function (event) {
+            var message = JSON.parse(event.data);
+            if (message.text != "") {
+                var messageElement = document.createElement('li');
+                messageElement.classList.add('chat-message');
+                var usernameElement = document.createElement('strong');
+                usernameElement.classList.add('nickname');
+                var usernameText = document.createTextNode(message.from + " : ");
+                usernameElement.appendChild(usernameText);
+                messageElement.appendChild(usernameElement);
+
+
+                var textElement = document.createElement('span');
+                var messageText = document.createTextNode(message.text);
+                textElement.appendChild(messageText);
+
+                messageElement.appendChild(textElement);
+
+                messageArea.appendChild(messageElement);
+                messageArea.scrollTop = messageArea.scrollHeight;
+            }
+        };
+    }
+
+
+    function closeConnection() {
+        socket.onclose = function (event) {
+            alert("Cоединение закрыто");
+            document.getElementById("connectButton").style.visibility = "visible";
+            document.getElementById("sendButton").style.visibility = "hidden";
+            document.getElementById("closeConnection").style.visibility = "hidden";
+
+        };
+        socket.close();
+    }
+
+    function sendMessage() {
+        var name = document.getElementById("name").value;
+        var text = document.getElementById("message").value;
+        var message = {
+            from: name,
+            text: text
+        };
+        console.log(message);
+        socket.send(JSON.stringify(message));
+    }
+
+</script>
+</html>

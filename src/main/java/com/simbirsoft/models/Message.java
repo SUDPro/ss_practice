@@ -1,25 +1,17 @@
 package com.simbirsoft.models;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
 public class Message {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User sender;
+    private String sender;
     private String text;
     private Date date;
 
     public Message() {
     }
 
-    public Message(User sender, String text, Date date) {
+    public Message(String sender, String text, Date date) {
         this.sender = sender;
         this.text = text;
         this.date = date;
@@ -33,11 +25,11 @@ public class Message {
         this.id = id;
     }
 
-    public User getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public void setSender(User sender) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 

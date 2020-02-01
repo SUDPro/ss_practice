@@ -21,5 +21,4 @@ public class AuthHandshakeHandler implements HandshakeHandler {
                                Map<String, Object> map) throws HandshakeFailureException {
         return handshakeHandler.doHandshake(serverHttpRequest, serverHttpResponse, webSocketHandler, map);
     }
-
 }

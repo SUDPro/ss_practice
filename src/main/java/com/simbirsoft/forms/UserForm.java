@@ -1,21 +1,22 @@
 package com.simbirsoft.forms;
 
 public class UserForm {
-    private String name;
+
+    private String login;
 
     public UserForm() {
     }
 
-    public UserForm(String name) {
-        this.name = name;
+    public UserForm(String login) {
+        this.login = login;
     }
 
-    public String getName() {
-        return name;
+    public String getLogin() {
+        return login;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLogin(String login) {
+        this.login = login;
     }
 }
 
