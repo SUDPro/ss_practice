@@ -1,14 +1,31 @@
 package com.simbirsoft.models;
 
+import com.simbirsoft.enumTypes.UserType;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "\"user\"")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String login;
+    private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     public User() {
     }
 
-    public User(String login) {
+    public User(String login, String passwordHash, UserType type) {
         this.login = login;
+        this.passwordHash = passwordHash;
+        this.type = type;
     }
 
     public Long getId() {
@@ -25,5 +42,21 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
     }
 }

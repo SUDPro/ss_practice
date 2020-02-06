@@ -1,6 +1,6 @@
 package com.simbirsoft.enumTypes;
 
-public enum UserTypes {
+public enum UserType {
     ADMIN,
     MODERATOR,
     SIMPLE

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Register</h1>
+
+<form method="post">
+    <p th:if="${error != null}" th:text="${error}"></p>
+    <input name="login" type="text" placeholder="login"/>
+    <input name="password" type="password" placeholder="password">
+    <input type="submit" value="Register">
+</form>
+</body>
+</html>
