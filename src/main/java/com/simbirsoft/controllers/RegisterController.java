@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RegisterController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
 
     @GetMapping("/register")

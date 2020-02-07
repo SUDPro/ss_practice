@@ -12,10 +12,10 @@ import java.util.List;
 public class ApiController {
 
     @Autowired
-    MessageService messageService;
+    private MessageService messageService;
 
     @GetMapping("/api/get-all-messages")
-    public List<Message> getAllMessages() {
+    private List<Message> getAllMessages() {
         return messageService.findAll();
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ChatController {
 
     @GetMapping("/room")
-    public String openChatPage(ModelMap modelMap, Authentication auth) {
+    private String openChatPage(ModelMap modelMap, Authentication auth) {
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
         modelMap.addAttribute("user", user);
         return "chat";

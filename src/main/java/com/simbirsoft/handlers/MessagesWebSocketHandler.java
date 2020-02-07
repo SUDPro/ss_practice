@@ -23,10 +23,10 @@ public class MessagesWebSocketHandler extends TextWebSocketHandler {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    MessageService messageService;
+    private MessageService messageService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
