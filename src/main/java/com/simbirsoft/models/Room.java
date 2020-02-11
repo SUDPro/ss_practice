@@ -1,0 +1,74 @@
+package com.simbirsoft.models;
+
+import com.simbirsoft.enumTypes.RoomType;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+public class Room {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User owner;
+
+    @Enumerated(value = EnumType.STRING)
+    private RoomType type;
+
+    @OneToMany(mappedBy = "room")
+    private List<BanInfo> users;
+
+    public Room() {
+    }
+
+    public Room(String name, User owner, RoomType type, List<BanInfo> users) {
+        this.name = name;
+        this.owner = owner;
+        this.type = type;
+        this.users = users;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public RoomType getType() {
+        return type;
+    }
+
+    public void setType(RoomType type) {
+        this.type = type;
+    }
+
+    public List<BanInfo> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<BanInfo> users) {
+        this.users = users;
+    }
+}

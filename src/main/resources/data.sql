@@ -3,6 +3,14 @@ INSERT INTO "user" (login, password_hash, type) VALUES
   ('user1', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'ADMIN'),
   ('user2', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE');
 
-INSERT INTO message(text, user_id) values
-    ('hello', 1),
-    ('hey', 2);
+INSERT INTO room(name) values
+    ('room1'),
+    ('room2');
+
+INSERT INTO message(text, user_id, room_id) values
+    ('hello', 1, 1),
+    ('hey', 2, 1);
+
+INSERT INTO ban_info(room_id, user_id) values
+    (1, 1),
+    (2, 1);
