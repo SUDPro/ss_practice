@@ -1,5 +1,7 @@
 package com.simbirsoft.models;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -17,6 +19,8 @@ public class Message {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    @Type(type="text")
     private String text;
     private Date date;
 

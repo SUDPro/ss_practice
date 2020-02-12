@@ -29,4 +29,7 @@ public class UserService {
         return usersRepository.getUserByRoomId(userId, roomId);
     }
 
+    public boolean isUserExistInChat(Long userId, Long roomId){
+        return usersRepository.getUserByRoomId(userId, roomId) != null;
+    }
 }

@@ -18,7 +18,8 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/' + roomId, function (message) {
-            showMessage(message.body);
+            var mes = JSON.parse(message.body);
+            showMessage(mes.from + ": " + mes.text);
         });
     });
 }
@@ -38,10 +39,15 @@ function loadMessages() {
     });
 }
 
+function addUser(){
+    stompClient.send("/app/chat/" + roomId + "/addUser", {}, JSON.stringify({
+        text: "Добавлен новый пользователь!"
+    }));
+}
+
 function send() {
-    stompClient.send("/app/chat", {}, JSON.stringify({
-        text: $("#message").val(),
-        roomId: Number(roomId),
+    stompClient.send("/app/chat/" + roomId + "/sendMessage", {}, JSON.stringify({
+        text: $("#message").val()
     }));
 }
 
