@@ -4,13 +4,23 @@ public class UserForm {
 
     private String login;
     private String password;
+    private String name;
 
     public UserForm() {
     }
 
-    public UserForm(String login, String password) {
+    public UserForm(String login, String password, String name) {
         this.login = login;
         this.password = password;
+        this.name = name;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {
@@ -21,11 +31,11 @@ public class UserForm {
         this.password = password;
     }
 
-    public String getLogin() {
-        return login;
+    public String getName() {
+        return name;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<h1>Hello</h1>
+<h1> It's your profile,  <span th:if="${user != null}" th:text="${user.getUsername()}"></span>!</h1>
+<a href="/logout">Выйти</a>
+<h1> Your rooms: </h1>
+<tr th:each="room: ${rooms}">
+    <td><a th:href="@{'/room/' + ${room.getId()}}"> <span th:text="${room.getName()}"></span> </a></td> <br>
+</tr>
 </body>
 </html>

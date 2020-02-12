@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class UserController {
@@ -20,8 +19,8 @@ public class UserController {
     @Autowired
     RoomService roomService;
 
-    @GetMapping("/home")
-    private String getUserPage(ModelMap modelMap, Authentication auth){
+    @GetMapping("/user")
+    private String getUserPage(ModelMap modelMap, Authentication auth) {
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
         modelMap.addAttribute("user", user);
         modelMap.addAttribute("rooms", roomService.getAllRoomsByUserId(user.getId()));

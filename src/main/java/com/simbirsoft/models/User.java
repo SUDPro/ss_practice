@@ -16,15 +16,18 @@ public class User {
     private String login;
     private String passwordHash;
 
+    private String username;
+
     @Enumerated(EnumType.STRING)
     private UserType type;
 
     public User() {
     }
 
-    public User(String login, String passwordHash, UserType type) {
+    public User(String login, String passwordHash, String username, UserType type) {
         this.login = login;
         this.passwordHash = passwordHash;
+        this.username = username;
         this.type = type;
     }
 
@@ -50,6 +53,14 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public UserType getType() {

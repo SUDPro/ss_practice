@@ -18,7 +18,7 @@ public class UserService {
     PasswordEncoder encoder;
 
     public void save(UserForm form) {
-        usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), UserType.SIMPLE));
+        usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), form.getName(), UserType.SIMPLE));
     }
 
     public boolean isUserExist(String login) {
