@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HomeController {
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    RoomService roomService;
+    private RoomService roomService;
 
     @GetMapping("/home")
     private String getUserPage(HttpServletRequest request, ModelMap modelMap, Authentication auth) {
@@ -40,6 +37,7 @@ public class HomeController {
         if (roomService.isRoomExist(form.getName())) {
             return "redirect:/home?error";
         } else {
+
             roomService.save(form, ((UserDetailsImpl) auth.getPrincipal()).getUser());
             return "redirect:/home";
         }

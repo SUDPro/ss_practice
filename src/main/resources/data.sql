@@ -16,4 +16,5 @@ INSERT INTO message(text, user_id, room_id) values
 
 INSERT INTO ban_info(room_id, user_id) values
     (1, 1),
-    (2, 1);
+    (2, 1),
+    (2, 2);

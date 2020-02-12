@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     public void save(UserForm form) {
         usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), form.getName(), UserType.SIMPLE));
@@ -25,11 +25,19 @@ public class UserService {
         return usersRepository.existsByLogin(login);
     }
 
+    public User getUserByLogin(String login){
+        return usersRepository.findOneByLogin(login).get();
+    }
+
     public User getUserByRoomId(Long userId, Long roomId){
         return usersRepository.getUserByRoomId(userId, roomId);
     }
 
     public boolean isUserExistInChat(Long userId, Long roomId){
         return usersRepository.getUserByRoomId(userId, roomId) != null;
+    }
+
+    public void save(User user) {
+        usersRepository.save(user);
     }
 }

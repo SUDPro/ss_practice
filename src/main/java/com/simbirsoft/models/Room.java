@@ -1,5 +1,6 @@
 package com.simbirsoft.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simbirsoft.enumTypes.RoomType;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ public class Room {
     @Enumerated(value = EnumType.STRING)
     private RoomType type;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "room")
+    @JsonIgnore
     private List<BanInfo> users;
 
     public Room() {

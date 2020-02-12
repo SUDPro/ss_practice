@@ -6,6 +6,7 @@ $(function () {
     });
     connect();
     roomId = window.location.pathname.split('/')[2];
+    //     /room/1
     $("#sendMessage").click(function () {
         send();
     });
@@ -19,7 +20,7 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/' + roomId, function (message) {
             var mes = JSON.parse(message.body);
-            showMessage(mes.from + ": " + mes.text);
+            showMessage(mes.sender.username + ": " + mes.text);
         });
     });
 }

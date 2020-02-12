@@ -16,13 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class RoomController {
 
     @Autowired
-    RoomService roomService;
+    private UserService userService;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    MessageService messageService;
+    private MessageService messageService;
 
     @GetMapping("/room/{id}")
     private String openChatPage(@PathVariable("id") Long id, ModelMap modelMap, Authentication auth) {

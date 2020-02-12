@@ -16,10 +16,10 @@ import java.util.List;
 public class RoomService {
 
     @Autowired
-    RoomsRepository roomsRepository;
+    private RoomsRepository roomsRepository;
 
     @Autowired
-    BanInfosRepository banInfosRepository;
+    private BanInfosRepository banInfosRepository;
 
     public List<Room> getAllRoomsByUserId(Long id) {
         return roomsRepository.findAllByUserId(id);
@@ -38,11 +38,34 @@ public class RoomService {
         addUserToChatList(room, user);
     }
 
+    public void save(String name, User user, RoomType type) {
+        Room room = new Room(name, user, type);
+        roomsRepository.save(room);
+        addUserToChatList(room, user);
+    }
+
+
     public boolean isRoomExist(String name) {
         return roomsRepository.existsByName(name);
     }
 
+    public User getRoomOwnerByRoomName(String name){
+        return roomsRepository.findByName(name).getOwner();
+    }
+
+    public User getRoomOwnerByRoomId(Long id){
+        return roomsRepository.findById(id).get().getOwner();
+    }
+
     public void addUserToChatList(Room room, User user) {
         banInfosRepository.save(new BanInfo(room, user));
+    }
+
+    public void removeRoomByName(String name) {
+        roomsRepository.deleteByName(name);
+    }
+
+    public void save(Room room) {
+        roomsRepository.save(room);
     }
 }

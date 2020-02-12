@@ -2,7 +2,9 @@ package com.simbirsoft.services;
 
 import com.simbirsoft.forms.MessageForm;
 import com.simbirsoft.models.Message;
+import com.simbirsoft.models.Room;
 import com.simbirsoft.repositories.MessagesRepository;
+import com.simbirsoft.repositories.RoomsRepository;
 import com.simbirsoft.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +19,18 @@ public class MessageService {
     MessagesRepository messagesRepository;
 
     @Autowired
-    UsersRepository usersRepository;
+    private UsersRepository usersRepository;
 
-    public void save(MessageForm form) {
+    @Autowired
+    private RoomsRepository roomsRepository;
+
+    public Message save(MessageForm form) {
         Message message = new Message();
         message.setDate(new Date());
         message.setText(form.getText());
+        message.setRoom(roomsRepository.findById(form.getRoomId()).get());
         message.setSender(usersRepository.findOneByLogin(form.getFrom()).get());
-        messagesRepository.save(message);
+        return messagesRepository.save(message);
     }
 
     public List<Message> findAll() {
