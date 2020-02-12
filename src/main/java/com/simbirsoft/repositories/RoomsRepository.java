@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface RoomsRepository extends JpaRepository<Room, Long> {
 
+    boolean existsByName(String name);
+
     @Query("select r from Room r join BanInfo bi on r=bi.room where bi.user.id=:id")
     List<Room> findAllByUserId(Long id);
 }

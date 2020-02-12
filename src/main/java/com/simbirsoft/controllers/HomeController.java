@@ -1,0 +1,47 @@
+package com.simbirsoft.controllers;
+
+import com.simbirsoft.forms.RoomForm;
+import com.simbirsoft.models.User;
+import com.simbirsoft.security.UserDetailsImpl;
+import com.simbirsoft.services.RoomService;
+import com.simbirsoft.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.servlet.http.HttpServletRequest;
+
+@Controller
+public class HomeController {
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    RoomService roomService;
+
+    @GetMapping("/home")
+    private String getUserPage(HttpServletRequest request, ModelMap modelMap, Authentication auth) {
+        if (request.getParameterMap().containsKey("error")) {
+            modelMap.addAttribute("error", "Комната с таким именем уже существует!");
+        }
+        User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
+        modelMap.addAttribute("user", user);
+        modelMap.addAttribute("rooms", roomService.getAllRoomsByUserId(user.getId()));
+        return "user";
+    }
+
+    @PostMapping("/home")
+    private String addNewRoom(RoomForm form, Authentication auth) {
+        if (roomService.isRoomExist(form.getName())) {
+            return "redirect:/home?error";
+        } else {
+            roomService.save(form, ((UserDetailsImpl) auth.getPrincipal()).getUser());
+            return "redirect:/home";
+        }
+    }
+}

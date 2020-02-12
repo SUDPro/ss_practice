@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/register", "/api/get-all-messages").permitAll()
-                .antMatchers("/room", "/user").authenticated()
+                .antMatchers("/room/*", "/home").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .failureUrl("/login?error")
                 .permitAll()
-                .defaultSuccessUrl("/room")
+                .defaultSuccessUrl("/home")
                 .and()
                 .logout().logoutSuccessUrl("/login")
                 .permitAll();

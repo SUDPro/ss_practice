@@ -22,6 +22,11 @@ public class BanInfo {
     public BanInfo() {
     }
 
+    public BanInfo(Room room, User user) {
+        this.room = room;
+        this.user = user;
+    }
+
     public BanInfo(Room room, User user, Date dateTime) {
         this.room = room;
         this.user = user;

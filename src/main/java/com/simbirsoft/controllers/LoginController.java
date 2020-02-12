@@ -1,5 +1,8 @@
 package com.simbirsoft.controllers;
 
+import com.simbirsoft.models.User;
+import com.simbirsoft.security.UserDetailsImpl;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController {
 
     @GetMapping("/login")
-    private String getLoginPage(HttpServletRequest request, ModelMap model) {
+    private String getLoginPage(HttpServletRequest request, ModelMap model, Authentication auth) {
+        if (auth != null){
+            return "redirect:/home";
+        }
         if (request.getParameterMap().containsKey("error")) {
             model.addAttribute("error", "Неверный логин или пароль!");
         }

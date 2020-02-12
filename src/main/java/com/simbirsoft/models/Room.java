@@ -10,10 +10,11 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
     private User owner;
 
     @Enumerated(value = EnumType.STRING)
@@ -25,11 +26,12 @@ public class Room {
     public Room() {
     }
 
-    public Room(String name, User owner, RoomType type, List<BanInfo> users) {
+
+
+    public Room(String name, User owner, RoomType type) {
         this.name = name;
         this.owner = owner;
         this.type = type;
-        this.users = users;
     }
 
     public Long getId() {

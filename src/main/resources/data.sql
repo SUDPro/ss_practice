@@ -5,7 +5,8 @@ INSERT INTO "user" (login, password_hash, type, username) VALUES
 
 INSERT INTO room(name) values
     ('room1'),
-    ('room2');
+    ('room2'),
+    ('room3');
 
 INSERT INTO message(text, user_id, room_id) values
     ('hello', 1, 1),

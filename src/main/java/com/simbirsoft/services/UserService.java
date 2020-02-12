@@ -24,4 +24,9 @@ public class UserService {
     public boolean isUserExist(String login) {
         return usersRepository.existsByLogin(login);
     }
+
+    public User getUserByRoomId(Long userId, Long roomId){
+        return usersRepository.getUserByRoomId(userId, roomId);
+    }
+
 }

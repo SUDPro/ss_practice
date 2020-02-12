@@ -5,7 +5,7 @@ $(function () {
         e.preventDefault();
     });
     connect();
-    roomId = window.location.pathname.replace("/", '');
+    roomId = window.location.pathname.split('/')[2];
     $("#sendMessage").click(function () {
         send();
     });
@@ -13,14 +13,10 @@ $(function () {
 });
 
 function connect() {
-    // создаем объект SockJs
     var socket = new SockJS('/messages');
-    // создаем stomp-клиент поверх sockjs
     stompClient = Stomp.over(socket);
-    // при подключении
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        // подписываемся на url
         stompClient.subscribe('/topic/' + roomId, function (message) {
             showMessage(message.body);
         });
@@ -36,7 +32,7 @@ function loadMessages() {
         method: "get",
         success: function (messages) {
             for(var i = 0; i < messages.length; i ++) {
-                showMessage(messages[i].sender.name + ": " + messages[i].text)
+                showMessage(messages[i].sender.username + ": " + messages[i].text)
             }
         }
     });
