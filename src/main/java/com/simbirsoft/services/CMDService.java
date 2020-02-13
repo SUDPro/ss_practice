@@ -7,10 +7,12 @@ import com.simbirsoft.models.BanInfo;
 import com.simbirsoft.models.Message;
 import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
+import com.simbirsoft.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.DateUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -76,9 +78,14 @@ public class CMDService {
                             case(CMDConst.USER_BAN_PREFFIX_LOGIN):
                                 switch(arr[4]){ //arr[5] minutes
                                     case(CMDConst.USER_BAN_PREFFIX_MINUTES):
-                                        banUserInAllRooms(arr[3], arr[5]);
+                                        if (isUserAdminOrOwner(message)){
+                                            banUserInAllRooms(arr[3], arr[5]);
+                                        }
+                                        break;
                                 }
+                                break;
                         }
+                        break;
                 }
         }
     }
@@ -88,7 +95,10 @@ public class CMDService {
             User user = userService.getUserByLogin(login);
             for (Room room :
                     roomService.getAllRoomsByUserId(user.getId())) {
-                banInfoService.save(new BanInfo(room, user, new Date(new Date().getTime() + Integer.parseInt(minutes) * 6000)));
+                System.out.println(Integer.parseInt(minutes));
+                BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
+                banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
+                banInfoService.save(banInfo);
             }
         }
     }
