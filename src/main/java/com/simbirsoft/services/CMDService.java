@@ -112,12 +112,9 @@ public class CMDService {
     }
 
     private boolean isUserAdminOrOwner(Message message){
-        if (message.getSender().getType().equals(UserType.ADMIN) ||
+        return message.getSender().getType().equals(UserType.ADMIN) ||
                 roomService.getRoomOwnerByRoomId(message.getRoom().getId()).getId()
-                        .equals(message.getSender().getId())){
-            return true;
-        }
-        return false;
+                        .equals(message.getSender().getId());
     }
 
     private void renameUser(User user, String newName) {
@@ -137,5 +134,4 @@ public class CMDService {
     private void createRoom(String name, User owner, RoomType type) {
         roomService.save(name, owner, type);
     }
-
 }
