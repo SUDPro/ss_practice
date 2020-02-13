@@ -9,6 +9,7 @@ import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
 import com.simbirsoft.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
