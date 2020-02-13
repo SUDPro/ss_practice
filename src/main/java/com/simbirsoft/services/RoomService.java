@@ -48,7 +48,6 @@ public class RoomService {
         return roomsRepository.findAllByUserId(userId);
     }
 
-
     public boolean isRoomExist(String name) {
         return roomsRepository.existsByName(name);
     }

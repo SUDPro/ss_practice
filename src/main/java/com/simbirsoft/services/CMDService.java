@@ -50,11 +50,28 @@ public class CMDService {
                             renameRoom(message.getRoom(), arr[2]);
                         }
                         break;
-                    case(CMDConst.ROOM_ADD_USER):
-                        if(!userService.isUserExistInChat(message.getSender().getId(), message.getRoom().getId()))
-                        banInfoService.save(new BanInfo(message.getRoom(), message.getSender()));
+                    case (CMDConst.ROOM_ADD_USER):
+                        if (!userService.isUserExistInChat(message.getSender().getId(), message.getRoom().getId())) {
+                            if (roomService.getRoomById(message.getRoom().getId()).equals(RoomType.PRIVATE) &&
+                                    banInfoService.countUsersInChat(message.getRoom()) <= 2) {
+                                banInfoService.save(new BanInfo(message.getRoom(), message.getSender()));
+                            } else if (roomService.getRoomById(message.getRoom().getId()).equals(RoomType.PUBLIC)) {
+                                banInfoService.save(new BanInfo(message.getRoom(), message.getSender()));
+                            }
+                        }
                         break;
                     case (CMDConst.ROOM_DISCONNECT):
+                        switch (arr[2]) {
+                            case (CMDConst.BAN_PARAMETER_LOGIN):
+                                switch (arr[4]) {
+                                    case (CMDConst.BAN_PARAMETER_MINUTES):
+                                        if (isUserAdminOrOwner(message)) {
+                                            banUserInOneRoom(userService.getUserByLogin(arr[3]), message.getRoom(), arr[5]);
+                                        }
+                                        break;
+                                }
+                                break;
+                        }
 
                 }
             case (CMDConst.USER_PREFIX):
@@ -74,10 +91,10 @@ public class CMDService {
                                 break;
                         }
                     case (CMDConst.USER_BAN):
-                        switch (arr[2]) { //arr[3] username
-                            case (CMDConst.USER_BAN_PARAMETER_LOGIN):
-                                switch (arr[4]) { //arr[5] minutes
-                                    case (CMDConst.USER_BAN_PARAMETER_MINUTES):
+                        switch (arr[2]) {
+                            case (CMDConst.BAN_PARAMETER_LOGIN):
+                                switch (arr[4]) {
+                                    case (CMDConst.BAN_PARAMETER_MINUTES):
                                         if (isUserAdminOrOwner(message)) {
                                             banUserInAllRooms(arr[3], arr[5]);
                                         }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class BanInfoService {
@@ -22,6 +23,10 @@ public class BanInfoService {
     public boolean isUserBanned(User user, Room room){
         BanInfo banInfo = findBanInfoByUserAndRoom(user, room);
         return (banInfo.getDateTime() != null && banInfo.getDateTime().after(new Date()));
+    }
+
+    public int countUsersInChat(Room room){
+        return banInfosRepository.findAllByRoom(room).size();
     }
 
     public void save(BanInfo banInfo){
