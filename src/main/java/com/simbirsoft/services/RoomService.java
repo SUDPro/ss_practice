@@ -44,6 +44,10 @@ public class RoomService {
         addUserToChatList(room, user);
     }
 
+    public List<Room> getAllUsersChats(Long userId){
+        return roomsRepository.findAllByUserId(userId);
+    }
+
 
     public boolean isRoomExist(String name) {
         return roomsRepository.existsByName(name);
@@ -59,6 +63,10 @@ public class RoomService {
 
     public void addUserToChatList(Room room, User user) {
         banInfosRepository.save(new BanInfo(room, user));
+    }
+
+    public void removeUserFromChatList(Room room, User user) {
+        banInfosRepository.delete(new BanInfo(room, user));
     }
 
     public void removeRoomByName(String name) {

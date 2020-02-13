@@ -3,11 +3,15 @@ package com.simbirsoft.services;
 import com.simbirsoft.constants.CMDConst;
 import com.simbirsoft.enumTypes.RoomType;
 import com.simbirsoft.enumTypes.UserType;
+import com.simbirsoft.models.BanInfo;
 import com.simbirsoft.models.Message;
 import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.DateUtils;
+
+import java.util.Date;
 
 @Service
 public class CMDService {
@@ -20,6 +24,9 @@ public class CMDService {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private BanInfoService banInfoService;
 
     public void doCommand(Message message) {
         String arr[] = message.getText().split(" ");
@@ -36,16 +43,12 @@ public class CMDService {
                         }
                         break;
                     case (CMDConst.ROOM_REMOVE):
-                        if (message.getSender().getType().equals(UserType.ADMIN) ||
-                                roomService.getRoomOwnerByRoomId(message.getRoom().getId()).getId()
-                                        .equals(message.getSender().getId())) {
+                        if (isUserAdminOrOwner(message)) {
                             removeRoom(arr[2]);
                         }
                         break;
                     case (CMDConst.ROOM_RENAME):
-                        if (message.getSender().getType().equals(UserType.ADMIN) ||
-                                roomService.getRoomOwnerByRoomId(message.getRoom().getId()).getId()
-                                        .equals(message.getSender().getId())) {
+                        if (isUserAdminOrOwner(message)) {
                             renameRoom(message.getRoom(), arr[2]);
                         }
                         break;
@@ -55,9 +58,7 @@ public class CMDService {
             case (CMDConst.USER_PREFIX):
                 switch (arr[1]) {
                     case (CMDConst.USER_RENAME):
-                        if (message.getSender().getType().equals(UserType.ADMIN) ||
-                                roomService.getRoomOwnerByRoomId(message.getRoom().getId()).getId()
-                                        .equals(message.getSender().getId())) {
+                        if (isUserAdminOrOwner(message)) {
                             renameUser(message.getSender(), arr[3]);
                         }
                         break;
@@ -68,8 +69,27 @@ public class CMDService {
                                 break;
                             case (CMDConst.USER_MODERATOR_DELETE):
                                 changeRights(UserType.SIMPLE, arr[3]);
+                                break;
+                        }
+                    case (CMDConst.USER_BAN):
+                        switch(arr[2]){ //arr[3] username
+                            case(CMDConst.USER_BAN_PREFFIX_LOGIN):
+                                switch(arr[4]){ //arr[5] minutes
+                                    case(CMDConst.USER_BAN_PREFFIX_MINUTES):
+                                        banUserInAllRooms(arr[3], arr[5]);
+                                }
                         }
                 }
+        }
+    }
+
+    private void banUserInAllRooms(String login, String minutes) {
+        if(userService.isUserExist(login)){
+            User user = userService.getUserByLogin(login);
+            for (Room room :
+                    roomService.getAllRoomsByUserId(user.getId())) {
+                banInfoService.save(new BanInfo(room, user, new Date(new Date().getTime() + Integer.parseInt(minutes) * 6000)));
+            }
         }
     }
 
@@ -79,6 +99,15 @@ public class CMDService {
             user.setType(moderator);
             userService.save(user);
         }
+    }
+
+    private boolean isUserAdminOrOwner(Message message){
+        if (message.getSender().getType().equals(UserType.ADMIN) ||
+                roomService.getRoomOwnerByRoomId(message.getRoom().getId()).getId()
+                        .equals(message.getSender().getId())){
+            return true;
+        }
+        return false;
     }
 
     private void renameUser(User user, String newName) {
