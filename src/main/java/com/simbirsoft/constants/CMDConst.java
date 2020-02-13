@@ -3,6 +3,7 @@ package com.simbirsoft.constants;
 public final class CMDConst {
     public static final String ROOM_PREFIX = "//room";
     public static final String ROOM_CREATE = "create";
+    public static final String ROOM_ADD_USER = "add";
     public static final String ROOM_REMOVE = "remove";
     public static final String ROOM_RENAME = "rename";
     public static final String ROOM_CONNECT = "connect";
@@ -15,6 +16,6 @@ public final class CMDConst {
     public static final String USER_MODERATOR = "moderator";
     public static final String USER_MODERATOR_ADD = "-n";
     public static final String USER_MODERATOR_DELETE = "-d";
-    public static final String  USER_BAN_PREFFIX_LOGIN = "-l";
-    public static final String  USER_BAN_PREFFIX_MINUTES = "-m";
+    public static final String  USER_BAN_PARAMETER_LOGIN = "-l";
+    public static final String USER_BAN_PARAMETER_MINUTES = "-m";
 }

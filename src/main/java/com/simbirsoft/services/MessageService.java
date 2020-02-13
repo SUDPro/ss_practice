@@ -2,7 +2,6 @@ package com.simbirsoft.services;
 
 import com.simbirsoft.forms.MessageForm;
 import com.simbirsoft.models.Message;
-import com.simbirsoft.models.Room;
 import com.simbirsoft.repositories.MessagesRepository;
 import com.simbirsoft.repositories.RoomsRepository;
 import com.simbirsoft.repositories.UsersRepository;
@@ -16,7 +15,7 @@ import java.util.List;
 public class MessageService {
 
     @Autowired
-    MessagesRepository messagesRepository;
+    private MessagesRepository messagesRepository;
 
     @Autowired
     private UsersRepository usersRepository;

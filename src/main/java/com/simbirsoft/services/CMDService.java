@@ -10,10 +10,6 @@ import com.simbirsoft.models.User;
 import com.simbirsoft.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.DateUtils;
-
-import java.util.Calendar;
-import java.util.Date;
 
 @Service
 public class CMDService {
@@ -54,6 +50,10 @@ public class CMDService {
                             renameRoom(message.getRoom(), arr[2]);
                         }
                         break;
+                    case(CMDConst.ROOM_ADD_USER):
+                        if(!userService.isUserExistInChat(message.getSender().getId(), message.getRoom().getId()))
+                        banInfoService.save(new BanInfo(message.getRoom(), message.getSender()));
+                        break;
                     case (CMDConst.ROOM_DISCONNECT):
 
                 }
@@ -74,11 +74,11 @@ public class CMDService {
                                 break;
                         }
                     case (CMDConst.USER_BAN):
-                        switch(arr[2]){ //arr[3] username
-                            case(CMDConst.USER_BAN_PREFFIX_LOGIN):
-                                switch(arr[4]){ //arr[5] minutes
-                                    case(CMDConst.USER_BAN_PREFFIX_MINUTES):
-                                        if (isUserAdminOrOwner(message)){
+                        switch (arr[2]) { //arr[3] username
+                            case (CMDConst.USER_BAN_PARAMETER_LOGIN):
+                                switch (arr[4]) { //arr[5] minutes
+                                    case (CMDConst.USER_BAN_PARAMETER_MINUTES):
+                                        if (isUserAdminOrOwner(message)) {
                                             banUserInAllRooms(arr[3], arr[5]);
                                         }
                                         break;
@@ -90,15 +90,18 @@ public class CMDService {
         }
     }
 
+    private void banUserInOneRoom(User user, Room room, String minutes) {
+        BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
+        banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
+        banInfoService.save(banInfo);
+    }
+
     private void banUserInAllRooms(String login, String minutes) {
-        if(userService.isUserExist(login)){
+        if (userService.isUserExist(login)) {
             User user = userService.getUserByLogin(login);
             for (Room room :
                     roomService.getAllRoomsByUserId(user.getId())) {
-                System.out.println(Integer.parseInt(minutes));
-                BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
-                banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
-                banInfoService.save(banInfo);
+                banUserInOneRoom(user, room, minutes);
             }
         }
     }
@@ -111,7 +114,7 @@ public class CMDService {
         }
     }
 
-    private boolean isUserAdminOrOwner(Message message){
+    private boolean isUserAdminOrOwner(Message message) {
         return message.getSender().getType().equals(UserType.ADMIN) ||
                 roomService.getRoomOwnerByRoomId(message.getRoom().getId()).getId()
                         .equals(message.getSender().getId());
