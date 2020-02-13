@@ -51,15 +51,19 @@ public class CMDService {
                         }
                         break;
                     case (CMDConst.ROOM_ADD_USER):
-                        if (!userService.isUserExistInChat(message.getSender().getId(), message.getRoom().getId())) {
-                            if (roomService.getRoomById(message.getRoom().getId()).equals(RoomType.PRIVATE) &&
-                                    banInfoService.countUsersInChat(message.getRoom()) <= 2) {
-                                banInfoService.save(new BanInfo(message.getRoom(), message.getSender()));
-                            } else if (roomService.getRoomById(message.getRoom().getId()).equals(RoomType.PUBLIC)) {
-                                banInfoService.save(new BanInfo(message.getRoom(), message.getSender()));
+                        if (!userService.isUserExistInChat(userService.getUserByLogin(arr[2]).getId(), message.getRoom().getId())) {
+                            if (message.getRoom().getType().equals(RoomType.PRIVATE) &&
+                                    banInfoService.countUsersInChat(message.getRoom()) < 2) {
+                                banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[2])));
+                            } else if (message.getRoom().getType().equals(RoomType.PUBLIC)) {
+                                banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[2])));
                             }
                         }
                         break;
+                    case (CMDConst.ROOM_CONNECT):
+                        if (roomService.getRoomByName(arr[2]).getType().equals(RoomType.PUBLIC)){
+                            banInfoService.save(new BanInfo(roomService.getRoomByName(arr[2]), message.getSender()));
+                        }
                     case (CMDConst.ROOM_DISCONNECT):
                         switch (arr[2]) {
                             case (CMDConst.BAN_PARAMETER_LOGIN):
@@ -72,13 +76,14 @@ public class CMDService {
                                 }
                                 break;
                         }
+                        break;
 
                 }
             case (CMDConst.USER_PREFIX):
                 switch (arr[1]) {
                     case (CMDConst.USER_RENAME):
                         if (isUserAdminOrOwner(message)) {
-                            renameUser(message.getSender(), arr[3]);
+                            renameUser(message.getSender(), arr[2]);
                         }
                         break;
                     case (CMDConst.USER_MODERATOR):

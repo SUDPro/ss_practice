@@ -29,6 +29,10 @@ public class RoomService {
         return roomsRepository.getOne(id);
     }
 
+    public Room getRoomByName(String name) {
+        return roomsRepository.findByName(name);
+    }
+
     public void save(RoomForm form, User user) {
         Room room = new Room(form.getName(), user, RoomType.PUBLIC);
         if (form.getType()) {

@@ -10,5 +10,5 @@ import java.util.List;
 public interface BanInfosRepository extends JpaRepository<BanInfo, Long> {
     BanInfo findBanInfoByUserAndRoom(User user, Room room);
 
-    List<Room> findAllByRoom(Room room);
+    List<BanInfo> findAllByRoom(Room room);
 }

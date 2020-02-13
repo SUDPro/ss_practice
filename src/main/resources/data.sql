@@ -1,7 +1,9 @@
 INSERT INTO "user" (login, password_hash, type, username) VALUES
     -- password - 1234
   ('user1', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'ADMIN', 'Stepan'),
-  ('user2', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Ivan');
+  ('user2', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Ivan'),
+  ('user3', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Alan'),
+  ('user4', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Al');
 
 INSERT INTO room(name, type, owner_id) values
     ('room1', 'PRIVATE', 1),

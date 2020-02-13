@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simbirsoft.enumTypes.RoomType;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Entity
+@Transactional
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
