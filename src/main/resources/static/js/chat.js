@@ -33,14 +33,14 @@ function loadMessages() {
         },
         method: "get",
         success: function (messages) {
-            for(var i = 0; i < messages.length; i ++) {
+            for (var i = 0; i < messages.length; i++) {
                 showMessage(messages[i].sender.username + ": " + messages[i].text)
             }
         }
     });
 }
 
-function addUser(){
+function addUser() {
     stompClient.send("/app/chat/" + roomId + "/addUser", {}, JSON.stringify({
         text: "Добавлен новый пользователь!"
     }));

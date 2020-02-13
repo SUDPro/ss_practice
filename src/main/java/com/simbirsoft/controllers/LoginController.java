@@ -1,7 +1,5 @@
 package com.simbirsoft.controllers;
 
-import com.simbirsoft.models.User;
-import com.simbirsoft.security.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

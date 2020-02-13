@@ -28,8 +28,6 @@ public class Room {
     public Room() {
     }
 
-
-
     public Room(String name, User owner, RoomType type) {
         this.name = name;
         this.owner = owner;

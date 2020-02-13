@@ -1,7 +1,6 @@
 package com.simbirsoft.controllers;
 
 import com.simbirsoft.forms.UserForm;
-import com.simbirsoft.security.UserDetailsImpl;
 import com.simbirsoft.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,10 +17,9 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/register")
     private String getRegisterPage(HttpServletRequest request, ModelMap model, Authentication auth) {
-        if (auth!= null){
+        if (auth != null) {
             return "redirect:/home";
         }
         if (request.getParameterMap().containsKey("error")) {

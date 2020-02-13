@@ -44,7 +44,7 @@ public class RoomService {
         addUserToChatList(room, user);
     }
 
-    public List<Room> getAllUsersChats(Long userId){
+    public List<Room> getAllUsersChats(Long userId) {
         return roomsRepository.findAllByUserId(userId);
     }
 
@@ -52,11 +52,11 @@ public class RoomService {
         return roomsRepository.existsByName(name);
     }
 
-    public User getRoomOwnerByRoomName(String name){
+    public User getRoomOwnerByRoomName(String name) {
         return roomsRepository.findByName(name).getOwner();
     }
 
-    public User getRoomOwnerByRoomId(Long id){
+    public User getRoomOwnerByRoomId(Long id) {
         return roomsRepository.findById(id).get().getOwner();
     }
 

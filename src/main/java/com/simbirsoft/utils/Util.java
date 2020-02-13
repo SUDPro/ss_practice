@@ -5,7 +5,6 @@ import java.util.Date;
 
 public class Util {
 
-
     public static Date getDatePlusMinutes(String minutes) {
         Calendar date = Calendar.getInstance();
         long t = date.getTimeInMillis();

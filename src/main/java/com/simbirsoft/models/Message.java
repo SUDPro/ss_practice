@@ -20,7 +20,7 @@ public class Message {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Type(type="text")
+    @Type(type = "text")
     private String text;
     private Date date;
 

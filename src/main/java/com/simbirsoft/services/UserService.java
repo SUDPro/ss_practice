@@ -25,15 +25,15 @@ public class UserService {
         return usersRepository.existsByLogin(login);
     }
 
-    public User getUserByLogin(String login){
+    public User getUserByLogin(String login) {
         return usersRepository.findOneByLogin(login).get();
     }
 
-    public User getUserByRoomId(Long userId, Long roomId){
+    public User getUserByRoomId(Long userId, Long roomId) {
         return usersRepository.getUserByRoomId(userId, roomId);
     }
 
-    public boolean isUserExistInChat(Long userId, Long roomId){
+    public boolean isUserExistInChat(Long userId, Long roomId) {
         return usersRepository.getUserByRoomId(userId, roomId) != null;
     }
 

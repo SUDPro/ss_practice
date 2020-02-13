@@ -38,7 +38,7 @@ public class RoomController {
                 modelMap.addAttribute("user", user);
                 modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
                 return "chat";
-            } else if (roomService.getRoomById(id).getType().equals(RoomType.PUBLIC)){
+            } else if (roomService.getRoomById(id).getType().equals(RoomType.PUBLIC)) {
                 modelMap.addAttribute("user", user);
                 modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
             }
