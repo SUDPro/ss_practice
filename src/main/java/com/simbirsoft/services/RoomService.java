@@ -48,6 +48,10 @@ public class RoomService {
         addUserToChatList(room, user);
     }
 
+    public List<Room> getAllPublicRooms(){
+        return roomsRepository.getAllPublicRooms();
+    }
+
     public List<Room> getAllUsersChats(Long userId) {
         return roomsRepository.findAllByUserId(userId);
     }

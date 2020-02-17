@@ -12,5 +12,5 @@ public interface UsersRepository extends JpaRepository<User, Long> {
     boolean existsByLogin(String login);
 
     @Query("select u from BanInfo b join User u on u.id = b.user.id where b.room.id=:roomId and b.user.id=:userId")
-    User getUserByRoomId(Long userId, Long roomId);
+    User getUserByIdAndRoomId(Long userId, Long roomId);
 }

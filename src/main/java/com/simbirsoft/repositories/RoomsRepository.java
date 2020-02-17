@@ -18,4 +18,7 @@ public interface RoomsRepository extends JpaRepository<Room, Long> {
 
     @Transactional
     void deleteByName(String name);
+
+    @Query("select r from Room r where r.type='PUBLIC'")
+    List<Room> getAllPublicRooms();
 }

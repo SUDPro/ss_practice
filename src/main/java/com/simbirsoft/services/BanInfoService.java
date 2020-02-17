@@ -21,7 +21,7 @@ public class BanInfoService {
 
     public boolean isUserBanned(User user, Room room) {
         BanInfo banInfo = findBanInfoByUserAndRoom(user, room);
-        return (banInfo.getDateTime() != null && banInfo.getDateTime().after(new Date()));
+        return (banInfo != null && banInfo.getDateTime() != null && banInfo.getDateTime().after(new Date()));
     }
 
     public int countUsersInChat(Room room) {

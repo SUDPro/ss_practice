@@ -1,6 +1,7 @@
 package com.simbirsoft.controllers;
 
 import com.simbirsoft.enumTypes.RoomType;
+import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
 import com.simbirsoft.security.UserDetailsImpl;
 import com.simbirsoft.services.BanInfoService;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.Date;
 
 @Controller
 public class RoomController {
@@ -34,17 +33,14 @@ public class RoomController {
     @GetMapping("/room/{id}")
     private String openChatPage(@PathVariable("id") Long id, ModelMap modelMap, Authentication auth) {
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
-        if (userService.getUserByRoomId(user.getId(), id) != null) {
-            if (banInfoService.findBanInfoByUserAndRoom(user, roomService.getRoomById(id)).getDateTime().before(new Date())) {
-                if (roomService.getRoomById(id).getType().equals(RoomType.PRIVATE) &&
-                        userService.isUserExistInChat(user.getId(), id)) {
-                    modelMap.addAttribute("user", user);
-                    modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
-                    return "chat";
-                } else if (roomService.getRoomById(id).getType().equals(RoomType.PUBLIC)) {
-                    modelMap.addAttribute("user", user);
-                    modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
-                }
+        Room room = roomService.getRoomById(id);
+        RoomType roomType = room.getType();
+        if (!banInfoService.isUserBanned(user, room)) {
+            if ((roomType.equals(RoomType.PRIVATE) &&
+                    userService.isUserExistInChat(user.getId(), id)) || roomType.equals(RoomType.PUBLIC)) {
+                modelMap.addAttribute("user", user);
+                modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
+                return "chat";
             }
         }
         return "redirect:/home";

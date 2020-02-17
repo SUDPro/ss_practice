@@ -26,7 +26,8 @@ public class HomeController {
         }
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
         modelMap.addAttribute("user", user);
-        modelMap.addAttribute("rooms", roomService.getAllRoomsByUserId(user.getId()));
+        modelMap.addAttribute("publicRooms", roomService.getAllPublicRooms());
+        modelMap.addAttribute("userRooms", roomService.getAllRoomsByUserId(user.getId()));
         return "user";
     }
 
@@ -35,7 +36,6 @@ public class HomeController {
         if (roomService.isRoomExist(form.getName())) {
             return "redirect:/home?error";
         } else {
-
             roomService.save(form, ((UserDetailsImpl) auth.getPrincipal()).getUser());
             return "redirect:/home";
         }

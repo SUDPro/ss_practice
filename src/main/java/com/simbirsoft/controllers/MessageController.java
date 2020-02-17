@@ -3,6 +3,7 @@ package com.simbirsoft.controllers;
 import com.simbirsoft.constants.CMDConst;
 import com.simbirsoft.forms.MessageForm;
 import com.simbirsoft.models.Message;
+import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
 import com.simbirsoft.security.UserDetailsImpl;
 import com.simbirsoft.services.*;
@@ -40,16 +41,16 @@ public class MessageController {
     @MessageMapping("/chat/{roomId}/sendMessage")
     public void sendMessage(@DestinationVariable Long roomId, @Payload MessageForm messageForm, Authentication auth) {
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
-        if (userService.isUserExistInChat(user.getId(), roomId)) {
-            if (!banInfoService.isUserBanned(user, roomService.getRoomById(roomId))) {
-                messageForm.setFrom(user.getLogin());
-                messageForm.setRoomId(roomId);
-                Message message = messageService.save(messageForm);
-                messagingTemplate.convertAndSend(format("/topic/%s", roomId), message);
-                if (message.getText().startsWith(CMDConst.ROOM_PREFIX) | message.getText().startsWith(CMDConst.USER_PREFIX)) {
-                    cmdService.doCommand(message);
-                }
+        Room room = roomService.getRoomById(roomId);
+        if (!banInfoService.isUserBanned(user, room)) {
+            messageForm.setFrom(user.getLogin());
+            messageForm.setRoomId(roomId);
+            Message message = messageService.save(messageForm);
+            messagingTemplate.convertAndSend(format("/topic/%s", roomId), message);
+            if (message.getText().startsWith(CMDConst.ROOM_PREFIX) | message.getText().startsWith(CMDConst.USER_PREFIX)) {
+                cmdService.doCommand(message);
             }
         }
+
     }
 }

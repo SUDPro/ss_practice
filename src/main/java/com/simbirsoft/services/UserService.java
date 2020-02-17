@@ -30,11 +30,11 @@ public class UserService {
     }
 
     public User getUserByRoomId(Long userId, Long roomId) {
-        return usersRepository.getUserByRoomId(userId, roomId);
+        return usersRepository.getUserByIdAndRoomId(userId, roomId);
     }
 
     public boolean isUserExistInChat(Long userId, Long roomId) {
-        return usersRepository.getUserByRoomId(userId, roomId) != null;
+        return usersRepository.getUserByIdAndRoomId(userId, roomId) != null;
     }
 
     public void save(User user) {
