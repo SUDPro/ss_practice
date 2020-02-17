@@ -13,14 +13,14 @@
     <label><input name="type" type="checkbox" value="1" unchecked/>Private chat?</label>
     <input type="submit" value="Create Room">
 </form>
-<h1> Your rooms: </h1>
+<h1> Your Rooms: </h1>
 <tr th:each="room: ${userRooms}">
     <td><a th:href="@{'/room/' + ${room.getId()}}"> <span th:text="${room.getName()}"></span> </a></td>
     <br>
 </tr>
-<h1> Public rooms: </h1>
-<tr th:each="room: ${publicRooms}">
-    <td><a th:href="@{'/room/' + ${room.getId()}}"> <span th:text="${room.getName()}"></span> </a></td>
+<h1>Room for all users:</h1>
+<tr>
+    <td><a th:href="@{'/room/' + ${room1.getId()}}"> <span th:text="${room1.getName()}"></span> </a></td>
     <br>
 </tr>
 </body>

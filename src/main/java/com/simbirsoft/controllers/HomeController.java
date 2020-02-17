@@ -22,18 +22,18 @@ public class HomeController {
     @GetMapping("/home")
     private String getUserPage(HttpServletRequest request, ModelMap modelMap, Authentication auth) {
         if (request.getParameterMap().containsKey("error")) {
-            modelMap.addAttribute("error", "Комната с таким именем уже существует!");
+            modelMap.addAttribute("error", "Ошибка при создании комнаты!");
         }
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
         modelMap.addAttribute("user", user);
-        modelMap.addAttribute("publicRooms", roomService.getAllPublicRooms());
+        modelMap.addAttribute("room1", roomService.getRoomByName("room1"));
         modelMap.addAttribute("userRooms", roomService.getAllRoomsByUserId(user.getId()));
         return "user";
     }
-
     @PostMapping("/home")
     private String addNewRoom(RoomForm form, Authentication auth) {
-        if (roomService.isRoomExist(form.getName())) {
+        form.setName(form.getName().trim());
+        if (roomService.isRoomExist(form.getName()) || form.getName().trim().equals("")) {
             return "redirect:/home?error";
         } else {
             roomService.save(form, ((UserDetailsImpl) auth.getPrincipal()).getUser());

@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Hello WebSocket</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -7,6 +7,9 @@
     <script src="/js/chat.js"></script>
 </head>
 <body>
+<h1>RoomName:<span th:if="${room != null}" th:text="${room.getName()}"></span></h1>
+<h1>RoomOwner:<span th:if="${room != null}" th:text="${room.getOwner().getUsername()}"></span></h1>
+<h1>RoomType:<span th:if="${room != null}" th:text="${room.getType()}"></span></h1>
 <div id="main-content" class="container">
 </div>
 <div class="row">

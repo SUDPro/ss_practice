@@ -6,8 +6,8 @@ INSERT INTO "user" (login, password_hash, type, username) VALUES
   ('user4', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Al');
 
 INSERT INTO room(name, type, owner_id) values
-    ('room1', 'PRIVATE', 1),
-    ('room2', 'PUBLIC', 1),
+    ('room1', 'PUBLIC', 1),
+    ('room2', 'PRIVATE', 1),
     ('room3', 'PUBLIC', 2);
 
 INSERT INTO message(text, user_id, room_id) values

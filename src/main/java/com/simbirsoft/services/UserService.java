@@ -2,7 +2,11 @@ package com.simbirsoft.services;
 
 import com.simbirsoft.enumTypes.UserType;
 import com.simbirsoft.forms.UserForm;
+import com.simbirsoft.models.BanInfo;
+import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
+import com.simbirsoft.repositories.BanInfosRepository;
+import com.simbirsoft.repositories.RoomsRepository;
 import com.simbirsoft.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,10 +19,18 @@ public class UserService {
     private UsersRepository usersRepository;
 
     @Autowired
+    private BanInfosRepository banInfosRepository;
+
+    @Autowired
+    private RoomsRepository roomsRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     public void save(UserForm form) {
-        usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), form.getName(), UserType.SIMPLE));
+       User user =  usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), form.getName(), UserType.SIMPLE));
+       Room room = roomsRepository.findByName("room1");
+       banInfosRepository.save(new BanInfo(room, user));
     }
 
     public boolean isUserExist(String login) {

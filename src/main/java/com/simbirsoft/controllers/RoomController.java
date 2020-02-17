@@ -38,6 +38,7 @@ public class RoomController {
         if (!banInfoService.isUserBanned(user, room)) {
             if ((roomType.equals(RoomType.PRIVATE) &&
                     userService.isUserExistInChat(user.getId(), id)) || roomType.equals(RoomType.PUBLIC)) {
+                modelMap.addAttribute("room", roomService.getRoomById(id));
                 modelMap.addAttribute("user", user);
                 modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
                 return "chat";

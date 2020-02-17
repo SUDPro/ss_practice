@@ -9,7 +9,6 @@ import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
 import com.simbirsoft.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,9 +19,6 @@ public class CMDService {
 
     @Autowired
     private RoomService roomService;
-
-    @Autowired
-    private MessageService messageService;
 
     @Autowired
     private BanInfoService banInfoService;
@@ -62,7 +58,7 @@ public class CMDService {
                         }
                         break;
                     case (CMDConst.ROOM_CONNECT):
-                        if (roomService.getRoomByName(arr[2]).getType().equals(RoomType.PUBLIC)){
+                        if (roomService.getRoomByName(arr[2]).getType().equals(RoomType.PUBLIC)) {
                             banInfoService.save(new BanInfo(roomService.getRoomByName(arr[2]), message.getSender()));
                         }
                     case (CMDConst.ROOM_DISCONNECT):

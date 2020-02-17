@@ -23,14 +23,14 @@ public class RegisterController {
             return "redirect:/home";
         }
         if (request.getParameterMap().containsKey("error")) {
-            model.addAttribute("error", "Пользователь с таким login уже существует!");
+            model.addAttribute("error", "Ошибка регистрации!");
         }
         return "register";
     }
 
     @PostMapping("/register")
     private String registerUser(UserForm form) {
-        if (userService.isUserExist(form.getLogin())) {
+        if (userService.isUserExist(form.getLogin()) || form.getName().trim().equals("")) {
             return "redirect:/register?error";
         } else {
             userService.save(form);
