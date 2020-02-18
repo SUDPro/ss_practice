@@ -3,7 +3,8 @@ INSERT INTO "user" (login, password_hash, type, username) VALUES
   ('user1', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'ADMIN', 'Stepan'),
   ('user2', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Ivan'),
   ('user3', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Alan'),
-  ('user4', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Al');
+  ('user4', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Al'),
+  ('user5', '$2a$10$63TIv7TSEcAxzFcpH3Tho.O98OqZ1NrHi1KE9MBL4rJ6frJBSuhsu', 'SIMPLE', 'Alibaba');
 
 INSERT INTO room(name, type, owner_id) values
     ('room1', 'PUBLIC', 1),
@@ -17,5 +18,8 @@ INSERT INTO message(text, user_id, room_id) values
     ('yo', 2, 3);
 
 INSERT INTO ban_info(room_id, user_id) values
-    (1, 1)
+    (1, 1),
+    (2, 1),
+    (1, 2),
+    (3, 2);
 

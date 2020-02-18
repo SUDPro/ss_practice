@@ -34,14 +34,16 @@ public class RoomController {
     private String openChatPage(@PathVariable("id") Long id, ModelMap modelMap, Authentication auth) {
         User user = ((UserDetailsImpl) auth.getPrincipal()).getUser();
         Room room = roomService.getRoomById(id);
-        RoomType roomType = room.getType();
-        if (!banInfoService.isUserBanned(user, room)) {
-            if ((roomType.equals(RoomType.PRIVATE) &&
-                    userService.isUserExistInChat(user.getId(), id)) || roomType.equals(RoomType.PUBLIC)) {
-                modelMap.addAttribute("room", roomService.getRoomById(id));
-                modelMap.addAttribute("user", user);
-                modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
-                return "chat";
+        if (room != null) {
+            RoomType roomType = room.getType();
+            if (!banInfoService.isUserBanned(user, room)) {
+                if ((roomType.equals(RoomType.PRIVATE) &&
+                        userService.isUserExistInChat(user.getId(), id)) || roomType.equals(RoomType.PUBLIC)) {
+                    modelMap.addAttribute("room", roomService.getRoomById(id));
+                    modelMap.addAttribute("user", user);
+                    modelMap.addAttribute("messages", messageService.getMessagesByRoomId(id));
+                    return "chat";
+                }
             }
         }
         return "redirect:/home";

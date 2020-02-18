@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1> It's your profile, <span th:if="${user != null}" th:text="${user.getUsername()}"></span>!</h1>
+<h3>Your status: <span th:if="${user != null}" th:text="${user.getType()}"/></h3>
 <a href="/logout">Выйти</a>
 <p th:if="${error != null}" th:text="${error}"></p>
 <form method="post">
@@ -14,13 +15,13 @@
     <input type="submit" value="Create Room">
 </form>
 <h1> Your Rooms: </h1>
-<tr th:each="room: ${userRooms}">
+<tr th:if="${userRooms != null}" th:each="room: ${userRooms}">
     <td><a th:href="@{'/room/' + ${room.getId()}}"> <span th:text="${room.getName()}"></span> </a></td>
     <br>
 </tr>
 <h1>Room for all users:</h1>
 <tr>
-    <td><a th:href="@{'/room/' + ${room1.getId()}}"> <span th:text="${room1.getName()}"></span> </a></td>
+    <td><a th:if="${room1 != null}" th:href="@{'/room/' + ${room1.getId()}}"> <span th:text="${room1.getName()}"></span> </a></td>
     <br>
 </tr>
 </body>

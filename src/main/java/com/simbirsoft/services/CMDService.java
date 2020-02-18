@@ -9,6 +9,7 @@ import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
 import com.simbirsoft.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,10 @@ public class CMDService {
 
     @Autowired
     private BanInfoService banInfoService;
+
+
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
 
     public void doCommand(Message message) {
         String arr[] = message.getText().split(" ");
@@ -76,6 +81,7 @@ public class CMDService {
                         break;
 
                 }
+                break;
             case (CMDConst.USER_PREFIX):
                 switch (arr[1]) {
                     case (CMDConst.USER_RENAME):
@@ -97,7 +103,7 @@ public class CMDService {
                             case (CMDConst.BAN_PARAMETER_LOGIN):
                                 switch (arr[4]) {
                                     case (CMDConst.BAN_PARAMETER_MINUTES):
-                                        if (isUserAdminOrOwner(message)) {
+                                        if (isUserAdminOrOwnerOrModerator(message)) {
                                             banUserInAllRooms(arr[3], arr[5]);
                                         }
                                         break;
@@ -106,6 +112,7 @@ public class CMDService {
                         }
                         break;
                 }
+                break;
         }
     }
 
@@ -139,6 +146,10 @@ public class CMDService {
                         .equals(message.getSender().getId());
     }
 
+    private boolean isUserAdminOrOwnerOrModerator(Message message) {
+        return isUserAdminOrOwner(message) || message.getSender().getType().equals(UserType.MODERATOR);
+    }
+
     private void renameUser(User user, String newName) {
         user.setUsername(newName);
         userService.save(user);
@@ -146,7 +157,9 @@ public class CMDService {
 
     private void renameRoom(Room room, String newName) {
         room.setName(newName);
-        roomService.save(room);
+//        room.setOwner(room.getOwner());
+        Room room1 = roomService.save(room);
+
     }
 
     private void removeRoom(String name) {

@@ -26,7 +26,7 @@ public class RoomService {
     }
 
     public Room getRoomById(Long id) {
-        return roomsRepository.getOne(id);
+        return roomsRepository.findById(id).isPresent()? roomsRepository.findById(id).get() : null;
     }
 
     public Room getRoomByName(String name) {
@@ -80,7 +80,7 @@ public class RoomService {
         roomsRepository.deleteByName(name);
     }
 
-    public void save(Room room) {
-        roomsRepository.save(room);
+    public Room save(Room room) {
+        return roomsRepository.save(room);
     }
 }
