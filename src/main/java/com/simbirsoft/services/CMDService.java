@@ -40,6 +40,7 @@ public class CMDService {
                                 break;
                             default:
                                 createRoom(arr[2], message.getSender(), RoomType.PUBLIC);
+                                break;
                         }
                         break;
                     case (CMDConst.ROOM_REMOVE):
@@ -66,6 +67,7 @@ public class CMDService {
                         if (roomService.getRoomByName(arr[2]).getType().equals(RoomType.PUBLIC)) {
                             banInfoService.save(new BanInfo(roomService.getRoomByName(arr[2]), message.getSender()));
                         }
+                        break;
                     case (CMDConst.ROOM_DISCONNECT):
                         switch (arr[2]) {
                             case (CMDConst.BAN_PARAMETER_LOGIN):
@@ -98,6 +100,7 @@ public class CMDService {
                                 changeRights(UserType.SIMPLE, arr[3]);
                                 break;
                         }
+                        break;
                     case (CMDConst.USER_BAN):
                         switch (arr[2]) {
                             case (CMDConst.BAN_PARAMETER_LOGIN):
