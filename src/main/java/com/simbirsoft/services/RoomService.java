@@ -73,7 +73,7 @@ public class RoomService {
     }
 
     public void removeUserFromChatList(Room room, User user) {
-        banInfosRepository.delete(new BanInfo(room, user));
+        banInfosRepository.deleteByUserAndRoom(user, room);
     }
 
     public void removeRoomByName(String name) {

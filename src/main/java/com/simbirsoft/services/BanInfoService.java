@@ -31,8 +31,4 @@ public class BanInfoService {
     public void save(BanInfo banInfo) {
         banInfosRepository.save(banInfo);
     }
-
-    public void delete(BanInfo banInfo) {
-        banInfosRepository.delete(banInfo);
-    }
 }

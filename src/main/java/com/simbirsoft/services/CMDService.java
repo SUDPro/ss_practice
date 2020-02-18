@@ -34,13 +34,10 @@ public class CMDService {
             case (CMDConst.ROOM_PREFIX):
                 switch (arr[1]) {
                     case (CMDConst.ROOM_CREATE):
-                        switch (arr[2]) {
-                            case (CMDConst.ROOM_CREATE_PARAMETER_PRIVATE):
-                                createRoom(arr[3], message.getSender(), RoomType.PRIVATE);
-                                break;
-                            default:
-                                createRoom(arr[2], message.getSender(), RoomType.PUBLIC);
-                                break;
+                        if (CMDConst.ROOM_CREATE_PARAMETER_PRIVATE.equals(arr[2])) {
+                            createRoom(arr[3], message.getSender(), RoomType.PRIVATE);
+                        } else {
+                            createRoom(arr[2], message.getSender(), RoomType.PUBLIC);
                         }
                         break;
                     case (CMDConst.ROOM_REMOVE):
@@ -54,39 +51,41 @@ public class CMDService {
                         }
                         break;
                     case (CMDConst.ROOM_CONNECT):
-                        switch (arr[3]) {
-                            case (CMDConst.PARAMETER_LOGIN):
+                        if (arr.length > 3 && CMDConst.PARAMETER_LOGIN.equals(arr[3])) {
+                            if (isUserAndRoomAreExist(arr[4], arr[2])) {
                                 if (isUserAdminOrOwner(message)) {
-                                    if (!userService.isUserExistInChat(userService.getUserByLogin(arr[4]).getId(), message.getRoom().getId())) {
-                                        if (message.getRoom().getType().equals(RoomType.PRIVATE) &&
-                                                banInfoService.countUsersInChat(message.getRoom()) < 2) {
-                                            banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[4])));
-                                        } else if (message.getRoom().getType().equals(RoomType.PUBLIC)) {
-                                            banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[4])));
+                                    Room room = roomService.getRoomByName(arr[2]);
+                                    User user = userService.getUserByLogin(arr[4]);
+                                    if (!userService.isUserExistInChat(user.getId(), room.getId())) {
+                                        if (room.getType().equals(RoomType.PRIVATE) &&
+                                                banInfoService.countUsersInChat(room) < 2) {
+                                            banInfoService.save(new BanInfo(room, user));
+                                        } else if (room.getType().equals(RoomType.PUBLIC)) {
+                                            banInfoService.save(new BanInfo(room, user));
                                         }
                                     }
                                 }
-                                break;
-                            default:
-                                if (!userService.isUserExistInChat(message.getSender().getId(), roomService.getRoomByName(arr[2]).getId())) {
-                                    if (message.getRoom().getType().equals(RoomType.PUBLIC)) {
-                                        banInfoService.save(new BanInfo(roomService.getRoomByName(arr[2]), message.getSender()));
+                            }
+                        } else {
+                            if (isUserAndRoomAreExist(message.getSender().getLogin(), arr[2])) {
+                                Room room = roomService.getRoomByName(arr[2]);
+                                if (!userService.isUserExistInChat(message.getSender().getId(), room.getId())) {
+                                    if (room.getType().equals(RoomType.PUBLIC)) {
+                                        banInfoService.save(new BanInfo(room, message.getSender()));
                                     }
                                 }
-                                break;
+                            }
                         }
                         break;
                     case (CMDConst.ROOM_DISCONNECT):
-                        switch (arr[2]) {
-                            case (CMDConst.PARAMETER_LOGIN):
-                                switch (arr[4]) {
-                                    case (CMDConst.PARAMETER_MINUTES):
-                                        if (isUserAdminOrOwnerOrModerator(message)) {
-                                            banUserInOneRoom(userService.getUserByLogin(arr[3]), message.getRoom(), arr[5]);
-                                        }
-                                        break;
+                        if (arr.length > 2 && CMDConst.PARAMETER_LOGIN.equals(arr[2])) {
+                            if (CMDConst.PARAMETER_MINUTES.equals(arr[4])) {
+                                if (isUserAdminOrOwnerOrModerator(message)) {
+                                    banUserInOneRoom(userService.getUserByLogin(arr[3]), message.getRoom(), arr[5]);
                                 }
-                                break;
+                            }
+                        } else {
+                            disconnectUser(message);
                         }
                         break;
 
@@ -110,35 +109,54 @@ public class CMDService {
                         }
                         break;
                     case (CMDConst.USER_BAN):
-                        switch (arr[2]) {
-                            case (CMDConst.PARAMETER_LOGIN):
-                                switch (arr[4]) {
-                                    case (CMDConst.PARAMETER_MINUTES):
-                                        if (isUserAdminOrOwnerOrModerator(message)) {
-                                            banUserInAllRooms(arr[3], arr[5]);
-                                        }
-                                        break;
+                        if (CMDConst.PARAMETER_LOGIN.equals(arr[2])) {
+                            if (CMDConst.PARAMETER_MINUTES.equals(arr[4])) {
+                                if (isUserAdminOrOwnerOrModerator(message)) {
+                                    banUserInAllRooms(arr[3], arr[5]);
                                 }
-                                break;
+                            }
                         }
                         break;
                 }
                 break;
+            default:
+
         }
     }
 
+    private void disconnectUser(Message message) {
+        roomService.removeUserFromChatList(message.getRoom(), message.getSender());
+    }
+
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isUserAndRoomAreExist(String login, String roomName) {
+        return (userService.isUserExist(login) && roomService.isRoomExist(roomName));
+    }
+
     private void banUserInOneRoom(User user, Room room, String minutes) {
-        BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
-        banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
-        banInfoService.save(banInfo);
+        if (isInteger(minutes)) {
+            BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
+            banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
+            banInfoService.save(banInfo);
+        }
     }
 
     private void banUserInAllRooms(String login, String minutes) {
-        if (userService.isUserExist(login)) {
-            User user = userService.getUserByLogin(login);
-            for (Room room :
-                    roomService.getAllRoomsByUserId(user.getId())) {
-                banUserInOneRoom(user, room, minutes);
+        if (isInteger(minutes)) {
+            if (userService.isUserExist(login)) {
+                User user = userService.getUserByLogin(login);
+                for (Room room :
+                        roomService.getAllRoomsByUserId(user.getId())) {
+                    banUserInOneRoom(user, room, minutes);
+                }
             }
         }
     }
@@ -168,7 +186,6 @@ public class CMDService {
 
     private void renameRoom(Room room, String newName) {
         room.setName(newName);
-//        room.setOwner(room.getOwner());
         Room room1 = roomService.save(room);
 
     }
