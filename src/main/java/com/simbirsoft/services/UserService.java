@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -39,10 +41,6 @@ public class UserService {
 
     public User getUserByLogin(String login) {
         return usersRepository.findOneByLogin(login).get();
-    }
-
-    public User getUserByRoomId(Long userId, Long roomId) {
-        return usersRepository.getUserByIdAndRoomId(userId, roomId);
     }
 
     public boolean isUserExistInChat(Long userId, Long roomId) {

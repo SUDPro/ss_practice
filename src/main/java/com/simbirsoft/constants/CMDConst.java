@@ -16,6 +16,6 @@ public final class CMDConst {
     public static final String USER_MODERATOR = "moderator";
     public static final String USER_MODERATOR_ADD = "-n";
     public static final String USER_MODERATOR_DELETE = "-d";
-    public static final String BAN_PARAMETER_LOGIN = "-l";
-    public static final String BAN_PARAMETER_MINUTES = "-m";
+    public static final String PARAMETER_LOGIN = "-l";
+    public static final String PARAMETER_MINUTES = "-m";
 }

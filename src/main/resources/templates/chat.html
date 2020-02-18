@@ -10,6 +10,19 @@
 <h1>RoomName:<span th:if="${room != null}" th:text="${room.getName()}"></span></h1>
 <h1>RoomOwner:<span th:if="${room != null}" th:text="${room.getOwner().getUsername()}"></span></h1>
 <h1>RoomType:<span th:if="${room != null}" th:text="${room.getType()}"></span></h1>
+<h1>Commands:</h1>
+<p>//room create {roomName}  --  create public room</p>
+<p>//room create -c {roomName}  --  create private room</p>
+<p>//room remove {roomName}  --  remove room</p>
+<p>//room connect {roomName}  --  enter in room</p>
+<p>//room connect {roomName} -l {login}  --  enter user in room</p>
+<p>//room disconnect  --  exit from room</p>
+<p>//room disconnect -l {login} -m {minutes}  --  exit user from room for {minutes}</p>
+<br>
+<p>//user rename {new username}  --  rename</p>
+<p>//user ban -l {login} -m {minutes}  --  ban user for {minutes}</p>
+<p>//user moderator -n {login}  --  make user moderator</p>
+<p>//user moderator -d {login}  --  make user simple</p>
 <div id="main-content" class="container">
 </div>
 <div class="row">

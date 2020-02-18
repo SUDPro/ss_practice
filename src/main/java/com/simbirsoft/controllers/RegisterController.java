@@ -30,7 +30,8 @@ public class RegisterController {
 
     @PostMapping("/register")
     private String registerUser(UserForm form) {
-        if (userService.isUserExist(form.getLogin()) || form.getName().trim().equals("")) {
+        if (userService.isUserExist(form.getLogin()) || form.getName().trim().equals("") ||
+                form.getLogin().trim().equals("") || form.getPassword().trim().equals("")) {
             return "redirect:/register?error";
         } else {
             userService.save(form);

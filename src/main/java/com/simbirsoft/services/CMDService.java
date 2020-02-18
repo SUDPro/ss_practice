@@ -53,27 +53,35 @@ public class CMDService {
                             renameRoom(message.getRoom(), arr[2]);
                         }
                         break;
-                    case (CMDConst.ROOM_ADD_USER):
-                        if (!userService.isUserExistInChat(userService.getUserByLogin(arr[2]).getId(), message.getRoom().getId())) {
-                            if (message.getRoom().getType().equals(RoomType.PRIVATE) &&
-                                    banInfoService.countUsersInChat(message.getRoom()) < 2) {
-                                banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[2])));
-                            } else if (message.getRoom().getType().equals(RoomType.PUBLIC)) {
-                                banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[2])));
-                            }
-                        }
-                        break;
                     case (CMDConst.ROOM_CONNECT):
-                        if (roomService.getRoomByName(arr[2]).getType().equals(RoomType.PUBLIC)) {
-                            banInfoService.save(new BanInfo(roomService.getRoomByName(arr[2]), message.getSender()));
+                        switch (arr[3]) {
+                            case (CMDConst.PARAMETER_LOGIN):
+                                if (isUserAdminOrOwner(message)) {
+                                    if (!userService.isUserExistInChat(userService.getUserByLogin(arr[4]).getId(), message.getRoom().getId())) {
+                                        if (message.getRoom().getType().equals(RoomType.PRIVATE) &&
+                                                banInfoService.countUsersInChat(message.getRoom()) < 2) {
+                                            banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[4])));
+                                        } else if (message.getRoom().getType().equals(RoomType.PUBLIC)) {
+                                            banInfoService.save(new BanInfo(message.getRoom(), userService.getUserByLogin(arr[4])));
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                if (!userService.isUserExistInChat(message.getSender().getId(), roomService.getRoomByName(arr[2]).getId())) {
+                                    if (message.getRoom().getType().equals(RoomType.PUBLIC)) {
+                                        banInfoService.save(new BanInfo(roomService.getRoomByName(arr[2]), message.getSender()));
+                                    }
+                                }
+                                break;
                         }
                         break;
                     case (CMDConst.ROOM_DISCONNECT):
                         switch (arr[2]) {
-                            case (CMDConst.BAN_PARAMETER_LOGIN):
+                            case (CMDConst.PARAMETER_LOGIN):
                                 switch (arr[4]) {
-                                    case (CMDConst.BAN_PARAMETER_MINUTES):
-                                        if (isUserAdminOrOwner(message)) {
+                                    case (CMDConst.PARAMETER_MINUTES):
+                                        if (isUserAdminOrOwnerOrModerator(message)) {
                                             banUserInOneRoom(userService.getUserByLogin(arr[3]), message.getRoom(), arr[5]);
                                         }
                                         break;
@@ -103,9 +111,9 @@ public class CMDService {
                         break;
                     case (CMDConst.USER_BAN):
                         switch (arr[2]) {
-                            case (CMDConst.BAN_PARAMETER_LOGIN):
+                            case (CMDConst.PARAMETER_LOGIN):
                                 switch (arr[4]) {
-                                    case (CMDConst.BAN_PARAMETER_MINUTES):
+                                    case (CMDConst.PARAMETER_MINUTES):
                                         if (isUserAdminOrOwnerOrModerator(message)) {
                                             banUserInAllRooms(arr[3], arr[5]);
                                         }
