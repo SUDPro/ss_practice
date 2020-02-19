@@ -23,11 +23,7 @@ public class CMDService {
 
     @Autowired
     private BanInfoService banInfoService;
-
-
-    @Autowired
-    private SimpMessageSendingOperations messagingTemplate;
-
+    
     public void doCommand(Message message) {
         String arr[] = message.getText().split(" ");
         switch (arr[0]) {
@@ -119,8 +115,6 @@ public class CMDService {
                         break;
                 }
                 break;
-            default:
-
         }
     }
 
