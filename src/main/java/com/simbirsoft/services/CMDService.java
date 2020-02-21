@@ -2,6 +2,8 @@ package com.simbirsoft.services;
 
 import com.simbirsoft.constants.CMDConst;
 import com.simbirsoft.models.Message;
+import com.simbirsoft.models.RoomCommand;
+import com.simbirsoft.models.UserCommand;
 import com.simbirsoft.utils.RoomCommandHandler;
 import com.simbirsoft.utils.UserCommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +13,17 @@ import org.springframework.stereotype.Service;
 public class CMDService {
 
     @Autowired
-    private UserService userService;
+    UserCommandHandler userCommandHandler;
 
     @Autowired
-    private RoomService roomService;
-
-    @Autowired
-    private BanInfoService banInfoService;
+    RoomCommandHandler roomCommandHandler;
 
     public void doCommand(Message message) {
         String messageText = message.getText();
         if (messageText.startsWith(CMDConst.USER_PREFIX)) {
-            new UserCommandHandler(message);
+            userCommandHandler.chooseCommand(new UserCommand(message));
         } else if (messageText.startsWith(CMDConst.ROOM_PREFIX)) {
-            new RoomCommandHandler(message);
+            roomCommandHandler.chooseCommand(new RoomCommand(message));
         }
-        ;
     }
 }

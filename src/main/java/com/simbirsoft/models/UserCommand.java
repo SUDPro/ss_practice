@@ -76,11 +76,9 @@ public class UserCommand {
     }
 
     private String getUserLogin(String [] parameters){
-        if (parameters.length > 2){
+        if (parameters.length > 3){
             return parameters[3];
         }
         return " ";
     }
-
-
 }

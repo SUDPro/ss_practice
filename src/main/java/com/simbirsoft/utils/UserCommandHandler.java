@@ -2,12 +2,19 @@ package com.simbirsoft.utils;
 
 import com.simbirsoft.constants.CMDConst;
 import com.simbirsoft.enumTypes.UserType;
-import com.simbirsoft.models.*;
+import com.simbirsoft.models.BanInfo;
+import com.simbirsoft.models.Room;
+import com.simbirsoft.models.User;
+import com.simbirsoft.models.UserCommand;
 import com.simbirsoft.services.BanInfoService;
 import com.simbirsoft.services.RoomService;
 import com.simbirsoft.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope("prototype")
 public class UserCommandHandler {
 
     @Autowired
@@ -19,11 +26,8 @@ public class UserCommandHandler {
     @Autowired
     private BanInfoService banInfoService;
 
-    public UserCommandHandler(Message message) {
-        chooseCommand(new UserCommand(message));
-    }
 
-    private void chooseCommand(UserCommand command) {
+    public void chooseCommand(UserCommand command) {
         if (command.getCommand().equals(CMDConst.USER_RENAME)) {
             rename(command);
         } else if (command.getCommand().equals(CMDConst.USER_BAN)) {
@@ -34,7 +38,7 @@ public class UserCommandHandler {
     }
 
     private void rename(UserCommand command) {
-        if(isUserAdminOrOwner(command)) {
+        if (isUserAdminOrOwner(command)) {
             renameUser(command.getSender(), command.getNewUsername());
         }
     }

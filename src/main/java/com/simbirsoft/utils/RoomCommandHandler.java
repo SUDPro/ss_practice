@@ -3,12 +3,19 @@ package com.simbirsoft.utils;
 import com.simbirsoft.constants.CMDConst;
 import com.simbirsoft.enumTypes.RoomType;
 import com.simbirsoft.enumTypes.UserType;
-import com.simbirsoft.models.*;
+import com.simbirsoft.models.BanInfo;
+import com.simbirsoft.models.Room;
+import com.simbirsoft.models.RoomCommand;
+import com.simbirsoft.models.User;
 import com.simbirsoft.services.BanInfoService;
 import com.simbirsoft.services.RoomService;
 import com.simbirsoft.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope("prototype")
 public class RoomCommandHandler {
 
     @Autowired
@@ -20,16 +27,12 @@ public class RoomCommandHandler {
     @Autowired
     private BanInfoService banInfoService;
 
-    public RoomCommandHandler(Message message) {
-        chooseCommand(new RoomCommand(message));
-    }
-
-    private void chooseCommand(RoomCommand command) {
+    public void chooseCommand(RoomCommand command) {
         if (command.getCommand().equals(CMDConst.ROOM_CREATE)) {
             create(command);
         } else if (command.getCommand().equals(CMDConst.ROOM_REMOVE)) {
             remove(command);
-        } else if (command.getCommand().equals(CMDConst.USER_MODERATOR)) {
+        } else if (command.getCommand().equals(CMDConst.ROOM_CONNECT)) {
             connect(command);
         } else if (command.getCommand().equals(CMDConst.ROOM_DISCONNECT)) {
             disconnect(command);
@@ -53,9 +56,11 @@ public class RoomCommandHandler {
     }
 
     private void remove(RoomCommand command) {
-        if (isUserAdminOrOwner(command.getSender(), command.getReceiveRoom())) {
-            if (roomService.isRoomExist(command.getNewRoomName())) {
-                removeRoom(command.getNewRoomName());
+        if (roomService.isRoomExist(command.getNewRoomName())) {
+            if (isUserAdminOrOwner(command.getSender(), roomService.getRoomByName(command.getNewRoomName()))) {
+                if (roomService.isRoomExist(command.getNewRoomName())) {
+                    roomService.removeRoomByName(command.getNewRoomName());
+                }
             }
         }
     }
@@ -66,7 +71,7 @@ public class RoomCommandHandler {
                 if (isUserAdminOrOwner(command.getSender(), command.getReceiveRoom())) {
                     Room room = roomService.getRoomByName(command.getNewRoomName());
                     User user = userService.getUserByLogin(command.getUserLogin());
-                    connectUserToChat(room, user, userService, banInfoService);
+                    connectUserToChat(room, user);
                 }
             }
         } else {
@@ -81,7 +86,7 @@ public class RoomCommandHandler {
         }
     }
 
-    public static void connectUserToChat(Room room, User user, UserService userService, BanInfoService banInfoService) {
+    private void connectUserToChat(Room room, User user) {
         if (!userService.isUserExistInChat(user.getId(), room.getId())) {
             if (room.getType().equals(RoomType.PRIVATE) &&
                     banInfoService.countUsersInChat(room) < 2) {
@@ -103,9 +108,9 @@ public class RoomCommandHandler {
     }
 
     private void banUserInOneRoom(User user, Room room, int minutes) {
-            BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
-            banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
-            banInfoService.save(banInfo);
+        BanInfo banInfo = banInfoService.findBanInfoByUserAndRoom(user, room);
+        banInfo.setDateTime(Util.getDatePlusMinutes(minutes));
+        banInfoService.save(banInfo);
     }
 
     private void disconnectUser(RoomCommand command) {
@@ -125,9 +130,5 @@ public class RoomCommandHandler {
     private void renameRoom(Room room, String newName) {
         room.setName(newName);
         roomService.save(room);
-    }
-
-    private void removeRoom(String name) {
-        roomService.removeRoomByName(name);
     }
 }
