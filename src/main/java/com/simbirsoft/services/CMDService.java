@@ -7,9 +7,10 @@ import com.simbirsoft.models.BanInfo;
 import com.simbirsoft.models.Message;
 import com.simbirsoft.models.Room;
 import com.simbirsoft.models.User;
+import com.simbirsoft.utils.RoomCommandHandler;
+import com.simbirsoft.utils.UserCommandHandler;
 import com.simbirsoft.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,9 +24,16 @@ public class CMDService {
 
     @Autowired
     private BanInfoService banInfoService;
-    
+
     public void doCommand(Message message) {
-        String arr[] = message.getText().split(" ");
+        String messageText = message.getText();
+        if(messageText.startsWith(CMDConst.USER_PREFIX)){
+            new UserCommandHandler(message);
+        } else if(messageText.startsWith(CMDConst.ROOM_PREFIX)){
+            new RoomCommandHandler(message);
+        };
+
+        String arr[] = message.getText().split("");
         switch (arr[0]) {
             case (CMDConst.ROOM_PREFIX):
                 switch (arr[1]) {
@@ -52,14 +60,7 @@ public class CMDService {
                                 if (isUserAdminOrOwner(message)) {
                                     Room room = roomService.getRoomByName(arr[2]);
                                     User user = userService.getUserByLogin(arr[4]);
-                                    if (!userService.isUserExistInChat(user.getId(), room.getId())) {
-                                        if (room.getType().equals(RoomType.PRIVATE) &&
-                                                banInfoService.countUsersInChat(room) < 2) {
-                                            banInfoService.save(new BanInfo(room, user));
-                                        } else if (room.getType().equals(RoomType.PUBLIC)) {
-                                            banInfoService.save(new BanInfo(room, user));
-                                        }
-                                    }
+                                    RoomCommandHandler.connectUserToChat(room, user, userService, banInfoService);
                                 }
                             }
                         } else {
@@ -180,6 +181,7 @@ public class CMDService {
 
     private void renameRoom(Room room, String newName) {
         room.setName(newName);
+//        room.setOwner(room.getOwner());
         Room room1 = roomService.save(room);
 
     }

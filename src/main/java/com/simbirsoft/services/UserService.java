@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
 
@@ -30,9 +28,9 @@ public class UserService {
     private PasswordEncoder encoder;
 
     public void save(UserForm form) {
-       User user =  usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), form.getName(), UserType.SIMPLE));
-       Room room = roomsRepository.findByName("room1");
-       banInfosRepository.save(new BanInfo(room, user));
+        User user = usersRepository.save(new User(form.getLogin(), encoder.encode(form.getPassword()), form.getName(), UserType.SIMPLE));
+        Room room = roomsRepository.findByName("room1");
+        banInfosRepository.save(new BanInfo(room, user));
     }
 
     public boolean isUserExist(String login) {
